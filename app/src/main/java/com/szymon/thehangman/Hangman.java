@@ -1,6 +1,5 @@
 package com.szymon.thehangman;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Hangman {
@@ -13,20 +12,22 @@ public class Hangman {
     private String word;
     private char[] answer;
     private int wordLength;
-    private int lives_left;
-    private Boolean isStarted;
-    private Boolean gameWon;
-    private Boolean gameLost;
+    private int livesLeft;
+    private GameStatus gameStatus;
+
+    private enum GameStatus {
+        GAME_STARTED,
+        GAME_STOPPED,
+        GAME_WON,
+        GAME_LOST
+    }
 
 
     Hangman() {
         this.word = "";
-        this.lives_left = LIVES;
-        this.isStarted = false;
-        this.gameWon = false;
-        this.gameLost = false;
+        this.livesLeft = LIVES;
+        this.gameStatus = GameStatus.GAME_STOPPED;
     }
-
     private void initAnswer(String word) {
         /**
          * Initializes answer array and fills it with '_' in same amount as word length.
@@ -83,21 +84,14 @@ public class Hangman {
          * Checks if game is won.
          */
         // if answer doesn't have '_' in then it is fully filled and game is won
-        if(!Arrays.toString(answer).contains("_")) {
-            isStarted = false;
-            return true;
-        } else {
-            return false;
-        }
+        return !Arrays.toString(answer).contains("_");
     }
 
     private boolean isLost() {
-        if(lives_left <= 0) {
-            isStarted = false;
-            return true;
-        } else {
-            return false;
-        }
+        /**
+         * Checks if game is lost.
+         */
+        return livesLeft <= 0;
     }
 
     private void Start() {
@@ -105,11 +99,10 @@ public class Hangman {
          * Starts new game
          */
         // restart game data
-        if (!isStarted) {
-            lives_left = LIVES;
-            isStarted = true;
-            gameWon = false;
-            gameLost = false;
+        if (!(gameStatus == GameStatus.GAME_STARTED)) {
+            livesLeft = LIVES;
+            gameStatus = GameStatus.GAME_STARTED;
+            System.out.println("New game has been started!");
         }
     }
 
@@ -149,21 +142,43 @@ public class Hangman {
 
         if(isGuessCorrect(userGuess)) {
             System.out.println("Guessed correctly!");
-            // TODO implement a better way to inform that game was won or lost with dialogs
             // TODO implement dialogs
             completeTheAnswerWith(userGuess);
+
             if(isWon()) {
-                gameWon = isWon();
+                System.out.println("Congratulations! You won!");
+                gameStatus = GameStatus.GAME_WON;
             }
 
         } else {
             System.out.println("Missed!");
+            livesLeft--;
 
-            lives_left--;
             if(isLost()) {
-                gameLost = isLost();
+                System.out.println("Ops! You lost! :(");
+                gameStatus = GameStatus.GAME_LOST;
             }
         }
+    }
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public char[] getAnswer() {
+        return answer;
+    }
+
+    public int getLivesLeft() {
+        return livesLeft;
+    }
+
+    public int getWordLength() {
+        return wordLength;
+    }
+
+    public String getWord() {
+        return word;
     }
 
 
