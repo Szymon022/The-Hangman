@@ -28,12 +28,13 @@ public class Hangman {
         this.livesLeft = LIVES;
         this.gameStatus = GameStatus.GAME_STOPPED;
     }
+
+    /**
+     * Initializes answer array and fills it with '_' in same amount as word length.
+     * @param word String
+     * @return void
+     */
     private void initAnswer(String word) {
-        /**
-         * Initializes answer array and fills it with '_' in same amount as word length.
-         * @param word - String
-         * @return void
-         */
 
         wordLength = word.length();
         answer = new char[wordLength];
@@ -46,11 +47,10 @@ public class Hangman {
         }
     }
 
+    /**
+     * Fills answer array with userGuess when index of character in word and array matches
+     */
     private void completeTheAnswerWith(final char userGuess) {
-        /**
-         * Fills answer array with userGuess when index of character in word and array matches
-         */
-
         for(int i = 0; i < wordLength; i++) {
             if(userGuess == answer[i]) {
                 answer[i] = userGuess;
@@ -58,46 +58,49 @@ public class Hangman {
         }
     }
 
+    /**
+     * Checks if user have guessed correctly and makes appropriate action.
+     * @param userGuess character
+     * @return boolean
+     */
     private boolean isGuessCorrect(final char userGuess) {
-        /**
-         * Checks if user have guessed correctly and makes appropriate action.
-         * @param userGuess - character
-         * @returns boolean
-         */
+
         // converting userGuess to CharSequence to use it in contains() metehod
         CharSequence guess = String.valueOf(userGuess);
         return word.contains(guess);
     }
 
+    /**
+     * Checks if word doesn't exceed character limit.
+     * @param word String
+     * @return boolean
+     */
     private boolean isWordValid(String word) {
-        /**
-         * Checks if word doesn't exceed character limit.
-         * @param word - String
-         * @return boolean
-         */
+
         // might implement case when string is empty
         return word.length() <= MAX_CHARACTERS;
     }
 
+    /**
+     * Checks if game is won.
+     */
     private boolean isWon() {
-        /**
-         * Checks if game is won.
-         */
+
         // if answer doesn't have '_' in then it is fully filled and game is won
         return !Arrays.toString(answer).contains("_");
     }
 
+    /**
+     * Checks if game is lost.
+     */
     private boolean isLost() {
-        /**
-         * Checks if game is lost.
-         */
         return livesLeft <= 0;
     }
 
+    /**
+     * Starts new game
+     */
     private void Start() {
-        /**
-         * Starts new game
-         */
         // restart game data
         if (!(gameStatus == GameStatus.GAME_STARTED)) {
             livesLeft = LIVES;
@@ -106,12 +109,13 @@ public class Hangman {
         }
     }
 
+    /**
+     * Creates a new game with given word.
+     * @param word String
+     * @return void
+     */
     public void newGame(String word) {
-        /**
-         * Creates a new game with given word.
-         * @param word - String
-         * @returns void
-         */
+
         if(isWordValid(word)) {
             this.word = word.toUpperCase();
             initAnswer(word);
@@ -121,25 +125,24 @@ public class Hangman {
         }
     }
 
+    /**
+     * Enables player to input his guess.
+     * <ul>
+     *     <li>
+     *         If guess is CORRECT then spaces in answer are filled with matching character.
+     *     </li>
+     *     <li>
+     *         If guess is NOT CORRECT then 1 life is lost.
+     *     </li>
+     *     <li>
+     *         If answer is completed then the game is won and gameStatus is updated.
+     *     </li>
+     *     <li>
+     *         If lives = 0 than game is lost and gameStatus is updated.
+     *     </li>
+     * </ul>
+     */
     public void enterGuess(final char userGuess) {
-        /**
-         * Enables player to input his guess.
-         * <ul>
-         *     <li>
-         *         If guess is CORRECT then spaces in answer are filled with matching character.
-         *     </li>
-         *     <li>
-         *         If guess is NOT CORRECT then 1 life is lost and the gallows build up.
-         *     </li>
-         *     <li>
-         *         If answer is completed then the game is.
-         *     </li>
-         *     <li>
-         *         If lives = 0 than game is lost.
-         *     </li>
-         * </ul>
-         */
-
         if(isGuessCorrect(userGuess)) {
             System.out.println("Guessed correctly!");
             // TODO implement dialogs
