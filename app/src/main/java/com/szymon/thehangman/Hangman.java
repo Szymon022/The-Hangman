@@ -145,7 +145,6 @@ public class Hangman {
     public void enterGuess(final char userGuess) {
         if(isGuessCorrect(userGuess)) {
             System.out.println("Guessed correctly!");
-            // TODO implement dialogs
             completeTheAnswerWith(userGuess);
 
             if(isWon()) {

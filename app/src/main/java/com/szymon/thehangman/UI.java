@@ -17,17 +17,19 @@ public class UI {
     private TextView tvLivesLeft;
     private TextView rvAnswer;
     private EditText etGuess;
-    private Button btRestart;
-    private Button btEnterGuess;
+    // private Button btRestart;
+    // private Button btEnterGuess;
     private ImageView ivGallows;
 
     private Activity activity;
 
 
-    UI(Activity activity) {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    UI(Activity activity, Hangman hangmanGame) {
         // activity instance is necessary to access mainActivity layout
         this.activity = activity;
         setContentView();
+        update(hangmanGame);
     }
 
 
@@ -39,8 +41,8 @@ public class UI {
         tvLivesLeft     = activity.findViewById(R.id.tv_lives_left);
         rvAnswer        = activity.findViewById(R.id.tv_answer);
         etGuess         = activity.findViewById(R.id.et_user_guess);
-        btRestart       = activity.findViewById(R.id.bt_game_restart);
-        btEnterGuess    = activity.findViewById(R.id.bt_enter_guess);
+        // btRestart       = activity.findViewById(R.id.bt_game_restart);
+        // btEnterGuess    = activity.findViewById(R.id.bt_enter_guess);
         ivGallows       = activity.findViewById(R.id.iv_gallows_pole);
         System.out.println("UI elements successfully initialized!");
     }
@@ -61,7 +63,7 @@ public class UI {
         // clear edit text where user enters his guess
         etGuess.setText("");
 
-        // update gallows state
+        // updates gallows pole image based on current lives
         Drawable gallowsDrawable = null;
         switch(gameInstance.getLivesLeft()) {
             case 5:
@@ -87,6 +89,8 @@ public class UI {
             break;
         }
         ivGallows.setImageDrawable(gallowsDrawable);
+
+        // TODO: Maybe Hangman class should use UI not MainActivity?
     }
 
     /**
@@ -109,5 +113,9 @@ public class UI {
             }
         }
         return generatedAnswer.toString();
+    }
+
+    public char getPlayerGuess() {
+        return etGuess.getText().toString().charAt(0);
     }
 }
