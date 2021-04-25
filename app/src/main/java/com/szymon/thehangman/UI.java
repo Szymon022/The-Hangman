@@ -61,6 +61,7 @@ public class UI {
         String currentAnswerState = genAnswerString(gameInstance.getAnswer());
         tvAnswer.setText(currentAnswerState);
 
+        // TODO Create better Gallows pole images
         // updates gallows pole image based on current lives
         Drawable gallowsDrawable = null;
         switch(gameInstance.getLivesLeft()) {
