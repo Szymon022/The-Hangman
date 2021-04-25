@@ -1,5 +1,6 @@
 package com.szymon.thehangman;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -15,13 +16,11 @@ public class UI {
 
     // UI contents:
     private TextView tvLivesLeft;
-    private TextView rvAnswer;
-    private EditText etGuess;
-    // private Button btRestart;
-    // private Button btEnterGuess;
+    private TextView tvAnswer;
     private ImageView ivGallows;
 
     private Activity activity;
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -39,10 +38,7 @@ public class UI {
     private void setContentView() {
         // setting all ids of views
         tvLivesLeft     = activity.findViewById(R.id.tv_lives_left);
-        rvAnswer        = activity.findViewById(R.id.tv_answer);
-        etGuess         = activity.findViewById(R.id.et_user_guess);
-        // btRestart       = activity.findViewById(R.id.bt_game_restart);
-        // btEnterGuess    = activity.findViewById(R.id.bt_enter_guess);
+        tvAnswer        = activity.findViewById(R.id.tv_answer);
         ivGallows       = activity.findViewById(R.id.iv_gallows_pole);
         System.out.println("UI elements successfully initialized!");
     }
@@ -53,15 +49,17 @@ public class UI {
      */
 
     // it is necessary as getDrawable() isn't supported in earlier Android versions
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 
     public void update(Hangman gameInstance) {
-        // set current lives
-        tvLivesLeft.setText(gameInstance.getLivesLeft());
-        // set current answer array
-        rvAnswer.setText(genAnswerString(gameInstance.getAnswer()));
-        // clear edit text where user enters his guess
-        etGuess.setText("");
+        // set current lives left
+        String currentLives = Integer.toString(gameInstance.getLivesLeft());
+        tvLivesLeft.setText(currentLives);
+
+        // set current answer
+        String currentAnswerState = genAnswerString(gameInstance.getAnswer());
+        tvAnswer.setText(currentAnswerState);
 
         // updates gallows pole image based on current lives
         Drawable gallowsDrawable = null;
@@ -89,8 +87,6 @@ public class UI {
             break;
         }
         ivGallows.setImageDrawable(gallowsDrawable);
-
-        // TODO: Maybe Hangman class should use UI not MainActivity?
     }
 
     /**
@@ -101,7 +97,6 @@ public class UI {
     private String genAnswerString(final char[] answer) {
         // creating StringBuilder object to create an answer that will be printed in TextView
         StringBuilder generatedAnswer = new StringBuilder();
-        int length = answer.length;
 
         for(char c : answer) {
             if(c != ' ') {
@@ -113,9 +108,5 @@ public class UI {
             }
         }
         return generatedAnswer.toString();
-    }
-
-    public char getPlayerGuess() {
-        return etGuess.getText().toString().charAt(0);
     }
 }

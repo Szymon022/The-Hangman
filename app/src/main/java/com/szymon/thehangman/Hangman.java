@@ -1,5 +1,10 @@
 package com.szymon.thehangman;
 
+import android.app.Activity;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.util.Arrays;
 
 public class Hangman {
@@ -15,6 +20,8 @@ public class Hangman {
     private int livesLeft;
     private GameStatus gameStatus;
 
+    private UI gameUI;
+
     private enum GameStatus {
         GAME_STARTED,
         GAME_STOPPED,
@@ -23,10 +30,13 @@ public class Hangman {
     }
 
 
-    Hangman() {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    Hangman(Activity activity) {
         this.word = "";
         this.livesLeft = LIVES;
         this.gameStatus = GameStatus.GAME_STOPPED;
+        initAnswer("");
+        this.gameUI = new UI(activity, this);
     }
 
     /**
@@ -52,7 +62,7 @@ public class Hangman {
      */
     private void completeTheAnswerWith(final char userGuess) {
         for(int i = 0; i < wordLength; i++) {
-            if(userGuess == answer[i]) {
+            if(userGuess == word.charAt(i)) {
                 answer[i] = userGuess;
             }
         }
@@ -64,9 +74,8 @@ public class Hangman {
      * @return boolean
      */
     private boolean isGuessCorrect(final char userGuess) {
-
-        // converting userGuess to CharSequence to use it in contains() metehod
-        CharSequence guess = String.valueOf(userGuess);
+        // converting userGuess to CharSequence to use it in contains() method
+        CharSequence guess = String.valueOf(userGuess).toUpperCase();
         return word.contains(guess);
     }
 
@@ -76,7 +85,6 @@ public class Hangman {
      * @return boolean
      */
     private boolean isWordValid(String word) {
-
         // might implement case when string is empty
         return word.length() <= MAX_CHARACTERS;
     }
@@ -85,7 +93,6 @@ public class Hangman {
      * Checks if game is won.
      */
     private boolean isWon() {
-
         // if answer doesn't have '_' in then it is fully filled and game is won
         return !Arrays.toString(answer).contains("_");
     }
@@ -100,6 +107,7 @@ public class Hangman {
     /**
      * Starts new game
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void Start() {
         // restart game data
         if (!(gameStatus == GameStatus.GAME_STARTED)) {
@@ -107,6 +115,7 @@ public class Hangman {
             gameStatus = GameStatus.GAME_STARTED;
             System.out.println("New game has been started!");
         }
+        gameUI.update(this);
     }
 
     /**
@@ -114,8 +123,8 @@ public class Hangman {
      * @param word String
      * @return void
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void newGame(String word) {
-
         if(isWordValid(word)) {
             this.word = word.toUpperCase();
             initAnswer(word);
@@ -142,24 +151,28 @@ public class Hangman {
      *     </li>
      * </ul>
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void enterGuess(final char userGuess) {
-        if(isGuessCorrect(userGuess)) {
-            System.out.println("Guessed correctly!");
-            completeTheAnswerWith(userGuess);
+        if(livesLeft > 0) {
+            if(isGuessCorrect(userGuess)) {
+                System.out.println("Guessed correctly!");
+                completeTheAnswerWith(userGuess);
 
-            if(isWon()) {
-                System.out.println("Congratulations! You won!");
-                gameStatus = GameStatus.GAME_WON;
+                if(isWon()) {
+                    System.out.println("Congratulations! You won!");
+                    gameStatus = GameStatus.GAME_WON;
+                }
+
+            } else {
+                System.out.println("Missed!");
+                livesLeft--;
+
+                if(isLost()) {
+                    System.out.println("Ops! You lost! :(");
+                    gameStatus = GameStatus.GAME_LOST;
+                }
             }
-
-        } else {
-            System.out.println("Missed!");
-            livesLeft--;
-
-            if(isLost()) {
-                System.out.println("Ops! You lost! :(");
-                gameStatus = GameStatus.GAME_LOST;
-            }
+            gameUI.update(this);
         }
     }
 
