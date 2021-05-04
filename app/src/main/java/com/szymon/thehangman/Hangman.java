@@ -153,6 +153,7 @@ public class Hangman {
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void enterGuess(final char userGuess) {
+        //TODO handle empty input
         if(livesLeft > 0) {
             if(isGuessCorrect(userGuess)) {
                 System.out.println("Guessed correctly!");

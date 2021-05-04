@@ -9,13 +9,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private Hangman hangman;
 
-    private ImageButton btRestartGame;
+//    private ImageButton btRestartGame;
     private Button btEnterGuess;
+    private TextView tvNewGameButton;
     private EditText etPlayerGuess;
 
 
@@ -32,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private void initActivity() {
         hangman = new Hangman(this);
 
-        btRestartGame = findViewById(R.id.bt_game_restart);
+//        btRestartGame = findViewById(R.id.bt_game_restart);
+        tvNewGameButton = findViewById(R.id.tv_new_game);
         btEnterGuess = findViewById(R.id.bt_enter_guess);
         etPlayerGuess = findViewById(R.id.et_user_guess);
 
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private void setOnClickListeners() {
 
         // in case Player wants to restart hangman
-        btRestartGame.setOnClickListener(new View.OnClickListener() {
+        tvNewGameButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {

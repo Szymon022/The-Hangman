@@ -32,12 +32,28 @@
             android:textSize="20sp"
             android:layout_weight="0.2"/>
 
-        <ImageButton
-            android:id="@+id/bt_game_restart"
+        <TextView
+            android:id="@+id/tv_new_game"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_restart"
-            android:contentDescription="Restarts the game" />
+            android:text="new game"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:padding="2dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/button_background"/>
+
+<!--        <Space-->
+<!--            android:layout_width="10sp"-->
+<!--            android:layout_height="wrap_content"/>-->
+
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/bt_game_restart"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/ic_restart"-->
+<!--            android:contentDescription="Restarts the game" />-->
 
     </LinearLayout>
 
