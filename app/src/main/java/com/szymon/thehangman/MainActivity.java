@@ -2,6 +2,7 @@ package com.szymon.thehangman;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Objects;
+
+public class MainActivity extends AppCompatActivity
+        implements NewGameDialogFragment.NewGameDialogFragmentListener{
 
     private Hangman hangman;
 
@@ -26,8 +30,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // TODO new game after entering application
+
         initActivity();
+        // once app was started user is required to enter new word to start the game
+        showNewGameDialog();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -49,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                // TODO hangman restart action - dialog with new word to enter by user
-                hangman.newGame("android");
+                showNewGameDialog();
             }
         });
 
@@ -59,11 +64,31 @@ public class MainActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-                char playerGuess = etPlayerGuess.getText().toString().toUpperCase().charAt(0);
-                hangman.enterGuess(playerGuess);
-                // clear input field each time
-                etPlayerGuess.setText("");
+                String playerGuess = etPlayerGuess.getText().toString().toUpperCase();
+                if(!playerGuess.isEmpty()) {
+                    hangman.enterGuess(playerGuess.charAt(0));
+                    // clear guess entrance field each time
+                    etPlayerGuess.setText("");
+                }
             }
         });
+    }
+
+    private void showNewGameDialog() {
+        DialogFragment newGameDialog = new NewGameDialogFragment();
+        newGameDialog.show(getSupportFragmentManager(), "newGame");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onDialogStartClick(DialogFragment dialog) {
+        // if Start button in dialog was clicked then pass given word to the game
+        if(hangman != null) {
+            EditText etWord = dialog.getDialog().findViewById(R.id.et_word);
+            String word = etWord.getText().toString();
+
+            hangman.newGame(word);
+            dialog.dismiss();
+        }
     }
 }
