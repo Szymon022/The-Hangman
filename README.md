@@ -1,4 +1,4 @@
-# Hangman for android (not finished)
+# Hangman for android (Game Status Dialog not finished)
 
 ## Technologies used
 Java, Android Studio, Git
